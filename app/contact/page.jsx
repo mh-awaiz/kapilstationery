@@ -8,21 +8,62 @@ const ContactPage = () => {
     message: "",
   });
 
+  const [popup, setPopup] = useState({
+    show: false,
+    message: "",
+    type: "success", // success | error
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    await fetch("/api/contact", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
 
-    alert("Message sent successfully!");
-    setForm({ name: "", email: "", message: "" });
+      if (!res.ok) throw new Error();
+
+      setPopup({
+        show: true,
+        message: "Message sent successfully!",
+        type: "success",
+      });
+
+      setForm({ name: "", email: "", message: "" });
+    } catch {
+      setPopup({
+        show: true,
+        message: "Failed to send message. Try again!",
+        type: "error",
+      });
+    }
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 3000);
   };
 
   return (
-    <section className="bg-[#22323c] text-[#f5f5f5] min-h-screen">
+    <section className="bg-[#22323c] text-[#f5f5f5] min-h-screen relative">
+      {/* POPUP */}
+      {popup.show && (
+        <div className="fixed top-6 right-6 z-50 animate-slide-in">
+          <div
+            className={`px-6 py-4 rounded-lg shadow-lg text-sm font-semibold
+              ${
+                popup.type === "success"
+                  ? "bg-[#17d492] text-[#22323c]"
+                  : "bg-red-500 text-white"
+              }`}
+          >
+            {popup.message}
+          </div>
+        </div>
+      )}
+
       <div className="max-w-4xl mx-auto px-4 py-16">
         <h1 className="text-4xl font-bold text-[#17d492] mb-8">Contact Us</h1>
 
