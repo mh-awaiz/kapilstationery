@@ -12,12 +12,16 @@ export default function CheckoutPage() {
     email: "",
     address: "",
   });
+  const [isJamiaStudent, setIsJamiaStudent] = useState(null);
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+const deliveryCharge = isJamiaStudent === false ? 30 : 0;
 
+const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+const grandTotal = total + deliveryCharge;
   const handleSubmit = async () => {
     if (!form.name || !form.phone || !form.address) {
       alert("Please fill all required fields");
@@ -30,9 +34,13 @@ export default function CheckoutPage() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        customer: form,
+        customer: {
+          ...form,
+          isJamiaStudent,
+        },
         cart,
-        total,
+        total: grandTotal,
+        deliveryCharge,
       }),
     });
 
@@ -75,6 +83,7 @@ export default function CheckoutPage() {
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 className="w-full px-4 py-3 rounded-lg bg-[#22323c]
                 border border-white/10 focus:outline-none focus:border-[#17d492]"
+                required
               />
 
               <input
@@ -84,16 +93,64 @@ export default function CheckoutPage() {
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
                 className="w-full px-4 py-3 rounded-lg bg-[#22323c]
                 border border-white/10 focus:outline-none focus:border-[#17d492]"
+                required
               />
 
               <input
                 type="email"
-                placeholder="Email (optional)"
+                placeholder="Email *"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 className="w-full px-4 py-3 rounded-lg bg-[#22323c]
                 border border-white/10 focus:outline-none focus:border-[#17d492]"
+                required
               />
+              <div className="mb-4">
+                <p className="mb-2 font-medium text-[#17d492]">
+                  Are you a Jamia student?
+                </p>
+
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="jamia"
+                      value="yes"
+                      onChange={() => setIsJamiaStudent(true)}
+                    />
+                    Yes
+                  </label>
+
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="jamia"
+                      value="no"
+                      onChange={() => setIsJamiaStudent(false)}
+                    />
+                    No
+                  </label>
+                </div>
+              </div>
+              {isJamiaStudent && (
+                <div className="mt-4 rounded-lg bg-[#17d492]/10 border border-[#17d492] p-4 text-sm">
+                  <p className="font-semibold mb-2 text-[#17d492]">
+                    📌 Important Delivery Information
+                  </p>
+                  <ul className="list-disc pl-5 space-y-1 text-white/80">
+                    <li>
+                      Delivery for Jamia students is <b>FREE</b>
+                    </li>
+                    <li>
+                      Girls Hostel: <b>7–8 PM</b> (J&K, BHM, Halls of Girls
+                      Residence, etc.)
+                    </li>
+                    <li>
+                      Boys Hostel: <b>8–9 PM</b> (APJ, AMK, SRK, FRK, etc.)
+                    </li>
+                  </ul>
+                </div>
+              )}
 
               <textarea
                 rows="4"
@@ -102,6 +159,7 @@ export default function CheckoutPage() {
                 onChange={(e) => setForm({ ...form, address: e.target.value })}
                 className="w-full px-4 py-3 rounded-lg bg-[#22323c]
                 border border-white/10 focus:outline-none focus:border-[#17d492]"
+                required
               />
             </div>
           </div>
@@ -123,9 +181,23 @@ export default function CheckoutPage() {
               ))}
             </div>
 
-            <div className="border-t border-white/10 pt-4 flex justify-between font-bold text-lg">
-              <span>Total</span>
-              <span className="text-[#17d492]">₹{total}</span>
+            <div className="border-t border-white/10 pt-4 space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span>Subtotal</span>
+                <span>₹{total}</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span>Delivery</span>
+                <span>
+                  {deliveryCharge === 0 ? "FREE" : `₹${deliveryCharge}`}
+                </span>
+              </div>
+
+              <div className="flex justify-between font-bold text-lg pt-2">
+                <span>Total</span>
+                <span className="text-[#17d492]">₹{grandTotal}</span>
+              </div>
             </div>
 
             <button
@@ -150,7 +222,6 @@ export default function CheckoutPage() {
     </div>
   );
 }
-
 // "use client";
 
 // import { useCart } from "../context/CartContext.js";
@@ -182,6 +253,8 @@ export default function CheckoutPage() {
 //         cart,
 //         total,
 //       }),
+
+
 //     });
 
 //     if (res.ok) {

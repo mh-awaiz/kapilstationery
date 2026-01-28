@@ -15,7 +15,7 @@ const sheets = google.sheets({ version: "v4", auth });
 
 export async function POST(req) {
   try {
-    const { customer, cart, total } = await req.json();
+    const { customer, cart, total, deliveryCharge } = await req.json();
 
     if (!customer?.name || !customer?.phone || !cart?.length) {
       return NextResponse.json(
@@ -38,7 +38,7 @@ export async function POST(req) {
     /* ---------- SAVE TO GOOGLE SHEET (PRIMARY) ---------- */
     await sheets.spreadsheets.values.append({
       spreadsheetId: process.env.SHEET_ID,
-      range: "Sheet1!A:H",
+      range: "Sheet1!A:J",
       valueInputOption: "RAW",
       requestBody: {
         values: [
@@ -48,6 +48,8 @@ export async function POST(req) {
             customer.phone,
             customer.email || "N/A",
             customer.address,
+            customer.isJamiaStudent ? "Yes" : "No",
+            deliveryCharge,
             productsText,
             total,
             new Date().toLocaleString(),
