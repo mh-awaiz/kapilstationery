@@ -17,9 +17,8 @@ const AboutPage = () => {
           From notebooks and pens to art supplies and exam essentials, we
           provide everything at the lowest possible price with
           <span className="text-[#17d492] font-semibold">
-            {" "}
             Cash on Delivery
-          </span>{" "}
+          </span>
           convenience.
         </p>
 

@@ -24,7 +24,7 @@ const Navbar = () => {
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center gap-8">
-            {["Home", "About", "Contact",].map((item) => (
+            {["Home", "About", "Contact"].map((item) => (
               <Link
                 key={item}
                 href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
@@ -35,9 +35,13 @@ const Navbar = () => {
                 </span>
                 <span className="absolute left-0 -bottom-1 h-[2px] w-0 bg-[#17d492] transition-all duration-300 group-hover:w-full" />
               </Link>
-              
             ))}
-            <Link href="#products">Products</Link>
+            <Link
+              href="/#products"
+              className="hover:text-[#17d492] transition-all duration-300"
+            >
+              Products
+            </Link>
           </div>
 
           {/* Right Icons */}
@@ -50,12 +54,11 @@ const Navbar = () => {
               <FaShoppingCart className="text-xl" />
 
               {/* Cart Badge (enable when cartCount > 0) */}
-              
+
               {/* <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full 
               bg-[#17d492] text-[#22323c] text-xs font-bold flex items-center justify-center animate-pulse">
                 2
               </span>  */}
-             
             </Link>
 
             {/* Mobile Menu Button */}
@@ -91,6 +94,12 @@ const Navbar = () => {
               {item}
             </Link>
           ))}
+          <Link
+            href="/#products"
+            className="hover:text-[#17d492] transition-all duration-300"
+          >
+            Products
+          </Link>
         </div>
       </div>
     </nav>

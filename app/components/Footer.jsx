@@ -1,5 +1,9 @@
 import React from "react";
 import { FaFacebookF, FaInstagram, FaWhatsapp } from "react-icons/fa";
+import { TbTruckDelivery } from "react-icons/tb";
+import { IoIosCall } from "react-icons/io";
+import { MdEmail } from "react-icons/md";
+
 import Link from "next/link";
 
 const Footer = () => {
@@ -10,9 +14,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
           {/* Brand */}
           <div>
-            <h2 className="text-xl font-bold text-[#17d492]">
-              Kapil Store
-            </h2>
+            <h2 className="text-xl font-bold text-[#17d492]">Kapil Store</h2>
             <p className="text-sm mt-3 text-[#f5f5f5]/80">
               Your one-stop shop for books, notebooks, pens and all stationery
               essentials. Cash on Delivery available.
@@ -47,10 +49,19 @@ const Footer = () => {
           {/* Contact */}
           <div>
             <h3 className="text-lg font-semibold mb-3">Contact</h3>
-            <p className="text-sm text-[#f5f5f5]/80">
-              📍 Local delivery available <br />
-              📞 +91 9XXXXXXXXX <br />
-              ✉️ support@stationerystore.com
+
+            <p className="text-sm text-[#f5f5f5]/80 flex items-center justify-center md:justify-start gap-2">
+              <TbTruckDelivery size={25} className="p-1" />
+              Local delivery available
+            </p>
+
+            <p className="text-sm text-[#f5f5f5]/80  flex items-center justify-center md:justify-start gap-2">
+              <IoIosCall size={25} className="p-1" />
+              +91 9XXXXXXXXX
+            </p>
+
+            <p className="text-sm text-[#f5f5f5]/80  flex items-center justify-center md:justify-start gap-2">
+              <MdEmail size={25} className="p-1" /> support@stationerystore.com
             </p>
 
             {/* Social Icons */}
@@ -81,7 +92,9 @@ const Footer = () => {
         <div className="border-t border-[#f5f5f5]/20 mt-10 pt-6 text-center text-sm text-[#f5f5f5]/70">
           © {new Date().getFullYear()} Kapil Store. All rights reserved.
         </div>
-        <p className="text-bold text-center">Website Developed by Mohammed Awaiz</p>
+        <p className="text-bold text-center">
+          Website Developed by Mohammed Awaiz
+        </p>
       </div>
     </footer>
   );

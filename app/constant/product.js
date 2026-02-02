@@ -1,7 +1,5 @@
 // data/products.js
 
-import { act } from "react";
-
 export const products = [
   {
     id: 1,
@@ -12,8 +10,8 @@ export const products = [
     actualPrice: 100,
     images: [
       "/products/book/notebook.jpg",
-      "/products/book/notebook.jpg",
-      "/products/book/notebook.jpg",
+      "/products/pen/pen.jpg",
+      "/products/pencil/pencil.jpg",
     ],
   },
   {
