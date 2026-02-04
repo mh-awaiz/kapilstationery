@@ -10,7 +10,10 @@
   "dependencies": {
     "fuse.js": "^7.1.0",
     "googleapis": "^170.1.0",
+    "lucide-react": "^0.563.0",
+    "mongoose": "^9.1.5",
     "next": "16.1.5",
+    "next-cloudinary": "^6.17.5",
     "nodemailer": "^7.0.12",
     "react": "19.2.3",
     "react-dom": "19.2.3",

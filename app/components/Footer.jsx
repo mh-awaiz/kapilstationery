@@ -57,11 +57,12 @@ const Footer = () => {
 
             <p className="text-sm text-[#f5f5f5]/80  flex items-center justify-center md:justify-start gap-2">
               <IoIosCall size={25} className="p-1" />
-              +91 9XXXXXXXXX
+              +91 79826 70413
             </p>
 
             <p className="text-sm text-[#f5f5f5]/80  flex items-center justify-center md:justify-start gap-2">
-              <MdEmail size={25} className="p-1" /> support@stationerystore.com
+              <MdEmail size={25} className="p-1" />{" "}
+              kapilguptakapil1111@gmail.com
             </p>
 
             {/* Social Icons */}
@@ -79,7 +80,7 @@ const Footer = () => {
                 <FaInstagram />
               </a>
               <a
-                href="#"
+                href="https://chat.whatsapp.com/Di7XVQjwzbf3yTEiX71tUS"
                 className="p-2 bg-[#17d492] text-[#22323c] rounded-full hover:scale-105 transition"
               >
                 <FaWhatsapp />
@@ -93,7 +94,14 @@ const Footer = () => {
           © {new Date().getFullYear()} Kapil Store. All rights reserved.
         </div>
         <p className="text-bold text-center">
-          Website Developed by Mohammed Awaiz
+          Website Developed by{" "}
+          <a
+            href="https://mohammedawaiz.vercel.app/"
+            target="_blank"
+            className="text-[#17d492] font-semibold"
+          >
+            Mohammed Awaiz
+          </a>
         </p>
       </div>
     </footer>
