@@ -28,8 +28,8 @@ export async function POST(req) {
     const product = await Product.create({
       title,
       description,
-      price,
-      actualPrice,
+      price: Number(price),
+      actualPrice: actualPrice ? Number(actualPrice) : undefined,
       images: cleanedImages,
     });
 
