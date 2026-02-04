@@ -69,18 +69,21 @@ const Footer = () => {
             <div className="flex justify-center md:justify-start gap-4 mt-4">
               <a
                 href="#"
+                target="_blank"
                 className="p-2 bg-[#17d492] text-[#22323c] rounded-full hover:scale-105 transition"
               >
                 <FaFacebookF />
               </a>
               <a
                 href="#"
+                target="_blank"
                 className="p-2 bg-[#17d492] text-[#22323c] rounded-full hover:scale-105 transition"
               >
                 <FaInstagram />
               </a>
               <a
                 href="https://chat.whatsapp.com/Di7XVQjwzbf3yTEiX71tUS"
+                target="_blank"
                 className="p-2 bg-[#17d492] text-[#22323c] rounded-full hover:scale-105 transition"
               >
                 <FaWhatsapp />

@@ -11,7 +11,7 @@ export default function AddToCartButton({ product, className = "" }) {
     e.stopPropagation();
     addToCart(product);
 
-    setAdded(true);
+    setAdded(true); // only this button shows “Added ✓”
     setTimeout(() => setAdded(false), 1500);
   };
 

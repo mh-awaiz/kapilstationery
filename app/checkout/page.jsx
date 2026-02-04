@@ -17,11 +17,11 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-const deliveryCharge = isJamiaStudent === false ? 30 : 0;
+  const deliveryCharge = isJamiaStudent === false ? 30 : 0;
 
-const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-const grandTotal = total + deliveryCharge;
+  const grandTotal = total + deliveryCharge;
 
   const handleSubmit = async () => {
     if (!form.name || !form.phone || !form.address) {
@@ -31,19 +31,27 @@ const grandTotal = total + deliveryCharge;
 
     setLoading(true);
 
-    const res = await fetch("/api/order", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        customer: {
-          ...form,
-          isJamiaStudent,
-        },
-        cart,
-        total: grandTotal,
-        deliveryCharge,
-      }),
-    });
+   const res = await fetch("/api/order", {
+     method: "POST",
+     headers: { "Content-Type": "application/json" },
+     body: JSON.stringify({
+       customer: { ...form, isJamiaStudent },
+       cart,
+       total: grandTotal,
+       deliveryCharge,
+     }),
+   });
+
+   let data;
+   try {
+     data = await res.json();
+     console.log("Order response:", data);
+   } catch (err) {
+     console.error("Failed to parse JSON:", err);
+     const text = await res.text();
+     console.error("Raw response:", text);
+   }
+
 
     setLoading(false);
 

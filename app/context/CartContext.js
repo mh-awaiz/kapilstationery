@@ -10,9 +10,7 @@ export const CartProvider = ({ children }) => {
   // Load cart from localStorage
   useEffect(() => {
     const savedCart = localStorage.getItem("cart");
-    if (savedCart) {
-      setCart(JSON.parse(savedCart));
-    }
+    if (savedCart) setCart(JSON.parse(savedCart));
   }, []);
 
   // Save cart to localStorage
@@ -20,46 +18,45 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  // ✅ Add to cart
+  // ✅ Add each click as a new cart line
   const addToCart = (product) => {
-    setCart((prev) => {
-      const existing = prev.find((item) => item.id === product.id);
-
-      if (existing) {
-        return prev.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item,
-        );
-      }
-
-      return [...prev, { ...product, quantity: 1 }];
-    });
+    setCart((prev) => [
+      ...prev,
+      {
+        ...product,
+        quantity: 1,
+        cartItemId: Date.now() + Math.random(), // unique ID per line
+      },
+    ]);
   };
 
-  // ✅ Increase quantity
-  const increaseQty = (id) => {
+  // ✅ Increase quantity by cartItemId
+  const increaseQty = (cartItemId) => {
     setCart((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item,
+        item.cartItemId === cartItemId
+          ? { ...item, quantity: item.quantity + 1 }
+          : item,
       ),
     );
   };
 
-  // ✅ Decrease quantity (auto-remove at 1)
-  const decreaseQty = (id) => {
+  // ✅ Decrease quantity by cartItemId
+  const decreaseQty = (cartItemId) => {
     setCart((prev) =>
       prev
         .map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity - 1 } : item,
+          item.cartItemId === cartItemId
+            ? { ...item, quantity: item.quantity - 1 }
+            : item,
         )
         .filter((item) => item.quantity > 0),
     );
   };
 
-  // ✅ Remove item completely
-  const removeFromCart = (id) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
+  // ✅ Remove item by cartItemId
+  const removeFromCart = (cartItemId) => {
+    setCart((prev) => prev.filter((item) => item.cartItemId !== cartItemId));
   };
 
   return (
@@ -67,9 +64,9 @@ export const CartProvider = ({ children }) => {
       value={{
         cart,
         addToCart,
-        removeFromCart,
         increaseQty,
         decreaseQty,
+        removeFromCart,
       }}
     >
       {children}

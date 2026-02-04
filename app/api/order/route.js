@@ -1,102 +1,90 @@
-import { NextResponse } from "next/server";
-import { google } from "googleapis";
+import { connectDB } from "@/lib/mongodb";
+import Order from "@/models/Order";
 import nodemailer from "nodemailer";
 
-/* ---------- GOOGLE SHEETS SETUP ---------- */
-const auth = new google.auth.GoogleAuth({
-  credentials: {
-    client_email: process.env.GOOGLE_CLIENT_EMAIL,
-    private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
-  },
-  scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-});
-
-const sheets = google.sheets({ version: "v4", auth });
-
+// POST method for placing an order
 export async function POST(req) {
   try {
-    const { customer, cart, total, deliveryCharge } = await req.json();
+    await connectDB();
 
-    if (!customer?.name || !customer?.phone || !cart?.length) {
-      return NextResponse.json(
-        { error: "Invalid order data" },
-        { status: 400 },
-      );
+    const body = await req.json();
+    const { customer, cart, total, deliveryCharge } = body;
+
+    if (!customer || !cart || cart.length === 0) {
+      return new Response(JSON.stringify({ message: "Invalid order data" }), {
+        status: 400,
+      });
     }
 
-    const productsText = cart
-      .map(
-        (item) =>
-          `${item.title} (Qty: ${item.quantity}) - ₹${
-            item.price * item.quantity
-          }`,
-      )
-      .join(" | ");
+    const orderId = "ORD-" + Date.now();
 
-    const orderId = `ORD-${Date.now()}`;
-
-    /* ---------- SAVE TO GOOGLE SHEET (PRIMARY) ---------- */
-    await sheets.spreadsheets.values.append({
-      spreadsheetId: process.env.SHEET_ID,
-      range: "Sheet1!A:J",
-      valueInputOption: "RAW",
-      requestBody: {
-        values: [
-          [
-            orderId,
-            customer.name,
-            customer.phone,
-            customer.email || "N/A",
-            customer.address,
-            customer.isJamiaStudent ? "Yes" : "No",
-            deliveryCharge,
-            productsText,
-            total,
-            new Date().toLocaleString(),
-          ],
-        ],
-      },
+    const order = new Order({
+      orderId,
+      customer,
+      items: cart.map((item) => ({
+        title: item.title,
+        quantity: item.quantity,
+        price: item.price,
+      })),
+      totalAmount: total,
+      deliveryCharge,
     });
 
-    /* ---------- EMAIL (SECONDARY – DO NOT FAIL ORDER) ---------- */
-    try {
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
-        },
-      });
+    await order.save();
 
-      await transporter.sendMail({
-        from: `"Stationery Orders" <${process.env.EMAIL_USER}>`,
-        to: process.env.EMAIL_USER,
-        subject: `🛒 New Order Received (${orderId})`,
-        html: `
-          <h2>New Order Received</h2>
-          <p><b>Order ID:</b> ${orderId}</p>
-          <p><b>Name:</b> ${customer.name}</p>
-          <p><b>Phone:</b> ${customer.phone}</p>
-          <p><b>Email:</b> ${customer.email || "N/A"}</p>
-          <p><b>Address:</b> ${customer.address}</p>
-          <hr/>
-          <p><b>Products:</b><br/>${productsText}</p>
-          <h3>Total: ₹${total}</h3>
-          <p><b>Payment:</b> Cash on Delivery</p>
-        `,
-      });
+    // Send email
+    try {
+      if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+        const transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+          },
+        });
+
+        const itemsList = cart
+          .map(
+            (item) =>
+              `${item.title} (Qty: ${item.quantity}) - ₹${item.price * item.quantity}`,
+          )
+          .join("\n");
+
+        await transporter.sendMail({
+          from: process.env.EMAIL_USER,
+          to: process.env.EMAIL_USER,
+          subject: `New Order Received: ${orderId}`,
+          text: `
+You have received a new order!
+
+Order ID: ${orderId}
+Name: ${customer.name}
+Phone: ${customer.phone}
+Email: ${customer.email}
+Address: ${customer.address}
+Jamia Student: ${customer.isJamiaStudent ? "Yes" : "No"}
+
+Items:
+${itemsList}
+
+Delivery Charge: ₹${deliveryCharge}
+Total Amount: ₹${total}
+Timestamp: ${new Date().toLocaleString()}
+          `,
+        });
+      }
     } catch (emailError) {
-      // ⚠️ Email failed → log only
-      console.error("EMAIL ERROR (ignored):", emailError);
+      console.error("Email sending failed:", emailError);
     }
 
-    /* ---------- ALWAYS SUCCESS ---------- */
-    return NextResponse.json({ success: true, orderId });
-  } catch (error) {
-    console.error("ORDER API ERROR:", error);
-    return NextResponse.json(
-      { error: "Failed to place order" },
-      { status: 500 },
+    return new Response(
+      JSON.stringify({ message: "Order placed successfully", orderId }),
+      { status: 200 },
     );
+  } catch (error) {
+    console.error("Order API error:", error);
+    return new Response(JSON.stringify({ message: "Internal Server Error" }), {
+      status: 500,
+    });
   }
 }

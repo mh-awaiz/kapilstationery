@@ -27,11 +27,15 @@ export default function CartPage() {
           <div className="md:col-span-2 space-y-4">
             {cart.map((item) => (
               <div
-                key={item.id}
+                key={item.cartItemId}
                 className="flex flex-col sm:flex-row gap-4 bg-[#334b54] rounded-xl p-4"
               >
                 <img
-                  src={item.images[0]}
+                  src={
+                    Array.isArray(item.images) && item.images.length > 0
+                      ? item.images[0]
+                      : "/placeholder.png"
+                  }
                   alt={item.title}
                   className="w-full sm:w-24 h-24 object-cover rounded-lg"
                 />
@@ -45,10 +49,8 @@ export default function CartPage() {
                   {/* Quantity Controls */}
                   <div className="flex items-center gap-3 mt-3">
                     <button
-                      onClick={() => decreaseQty(item.id)}
-                      disabled={item.quantity <= 1}
-                      className="w-8 h-8 rounded-full bg-[#22323c] border border-[#17d492]
-                      disabled:opacity-40 cursor-pointer"
+                      onClick={() => decreaseQty(item.cartItemId)}
+                      className="w-8 h-8 rounded-full bg-[#22323c] border border-[#17d492] disabled:opacity-40 cursor-pointer"
                     >
                       −
                     </button>
@@ -56,7 +58,7 @@ export default function CartPage() {
                     <span className="font-semibold">{item.quantity}</span>
 
                     <button
-                      onClick={() => increaseQty(item.id)}
+                      onClick={() => increaseQty(item.cartItemId)}
                       className="w-8 h-8 rounded-full bg-[#17d492] text-[#22323c] cursor-pointer"
                     >
                       +
@@ -66,7 +68,7 @@ export default function CartPage() {
 
                 {/* Remove */}
                 <button
-                  onClick={() => removeFromCart(item.id)}
+                  onClick={() => removeFromCart(item.cartItemId)}
                   className="text-red-400 hover:text-red-500 text-sm self-start sm:self-center"
                 >
                   Remove

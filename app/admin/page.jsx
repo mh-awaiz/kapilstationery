@@ -114,14 +114,16 @@ function OrdersDashboard({ adminKey }) {
     }
   }
 
-  async function markCompleted(rowIndex) {
+  async function markCompleted(orderId) {
+    if (!confirm("Mark this order as completed?")) return;
+
     await fetch("/api/admin/orders/delete", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "x-admin-key": adminKey,
       },
-      body: JSON.stringify({ rowIndex }),
+      body: JSON.stringify({ orderId }),
     });
 
     loadOrders();
@@ -129,37 +131,59 @@ function OrdersDashboard({ adminKey }) {
 
   useEffect(() => {
     loadOrders();
-  }, [adminKey]); //important
+  }, [adminKey]);
 
   if (loading) return <p>Loading orders...</p>;
 
+  if (orders.length === 0) return <p>No orders found</p>;
+
   return (
-    <div className="bg-white p-6 rounded shadow">
-      <h2 className="text-xl font-semibold mb-4">Orders</h2>
-
-      {orders.length === 0 && <p className="text-gray-500">No orders found</p>}
-
+    <div className="bg-white p-6 rounded shadow space-y-4">
       {orders.map((order) => (
-        <div
-          key={order.rowIndex}
-          className="border rounded p-4 flex justify-between mb-3"
-        >
-          <div>
-            <p className="font-medium">{order.name}</p>
-            <p className="text-sm text-gray-500">₹{order.total}</p>
+        <div key={order.orderId} className="border rounded p-4">
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="font-semibold">Order ID: {order.orderId}</p>
+              <p className="text-sm text-gray-500">
+                {new Date(order.createdAt).toLocaleString()}
+              </p>
+            </div>
+            <button
+              onClick={() => markCompleted(order.orderId)}
+              className="bg-red-600 text-white px-3 py-1 rounded"
+            >
+              Completed
+            </button>
           </div>
 
-          <button
-            onClick={() => markCompleted(order.rowIndex)}
-            className="bg-green-600 text-white px-3 py-1 rounded"
-          >
-            Completed
-          </button>
+          <div className="mt-2 border-t border-gray-200 pt-2">
+            <p className="font-medium">Customer Details:</p>
+            <p>Name: {order.customer.name}</p>
+            <p>Phone: {order.customer.phone}</p>
+            <p>Email: {order.customer.email || "N/A"}</p>
+            <p>Address: {order.customer.address}</p>
+            <p>Jamia Student: {order.customer.isJamiaStudent ? "Yes" : "No"}</p>
+          </div>
+
+          <div className="mt-2 border-t border-gray-200 pt-2">
+            <p className="font-medium">Items:</p>
+            {order.items.map((item, idx) => (
+              <p key={idx}>
+                {item.title} × {item.quantity} = ₹{item.price * item.quantity}
+              </p>
+            ))}
+          </div>
+
+          <div className="mt-2 border-t border-gray-200 pt-2 flex justify-between font-bold">
+            <p>Total: ₹{order.totalAmount}</p>
+            <p>Delivery: ₹{order.deliveryCharge}</p>
+          </div>
         </div>
       ))}
     </div>
   );
 }
+
 
 /* ================= PRODUCTS ================= */
 
