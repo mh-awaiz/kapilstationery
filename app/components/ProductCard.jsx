@@ -4,6 +4,9 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import AddToCartButton from "../components/AddToCartButton";
 
 export default function ProductCard({ product }) {
+  // ✅ Guard against missing product
+  if (!product) return null;
+
   const [currentImage, setCurrentImage] = useState(0);
   const intervalRef = useRef(null);
 
@@ -14,11 +17,10 @@ export default function ProductCard({ product }) {
       : ["/placeholder.png"];
   }, [product.images]);
 
-  // ✅ Price logic (handles price > actualPrice or actualPrice missing)
-  const price = Number(product.price || 0); // Selling price
-  const actualPrice = Number(product.actualPrice || 0); // Original price
+  // ✅ Safe price logic
+  const price = Number(product.price || 0);
+  const actualPrice = Number(product.actualPrice || 0);
 
-  // Ensure we only show discount if original price > selling price
   const hasDiscount = actualPrice > price;
   const discountPercent = hasDiscount
     ? Math.round(((actualPrice - price) / actualPrice) * 100)
@@ -51,7 +53,7 @@ export default function ProductCard({ product }) {
       onMouseLeave={startAutoSlide}
     >
       {/* ✅ Discount Badge */}
-      {hasDiscount && (
+      {hasDiscount && discountPercent > 0 && (
         <span className="absolute top-3 left-3 bg-red-500 text-white text-xs px-2 py-1 rounded z-10">
           {discountPercent}% OFF
         </span>
@@ -60,7 +62,7 @@ export default function ProductCard({ product }) {
       {/* ✅ Image */}
       <img
         src={images[currentImage]}
-        alt={product.title}
+        alt={product.title || "Product"}
         className="rounded-lg w-full h-44 sm:h-48 object-cover transition duration-500"
       />
 

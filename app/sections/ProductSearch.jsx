@@ -18,9 +18,11 @@ const ProductsSection = () => {
       try {
         const res = await fetch("/api/products");
         const data = await res.json();
-        setProducts(data);
+        // ✅ Ensure data is an array
+        setProducts(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error("Failed to load products", err);
+        setProducts([]);
       } finally {
         setLoading(false);
       }
@@ -78,9 +80,11 @@ const ProductsSection = () => {
         {!loading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {visibleProducts.length > 0 ? (
-              visibleProducts.map((product) => (
-                <ProductCard key={product._id} product={product} />
-              ))
+              visibleProducts.map((product) =>
+                product ? (
+                  <ProductCard key={product._id} product={product} />
+                ) : null,
+              )
             ) : (
               <p className="text-center text-[#f5f5f5] col-span-full">
                 No products found.
