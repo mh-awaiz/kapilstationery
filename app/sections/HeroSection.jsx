@@ -85,7 +85,8 @@ const Hero = () => {
                 "Free delivery for Jamia students",
                 "Hassle-free Cash on Delivery",
                 "Mon-Fri Delivery (Working Days Only)",
-                "For Urgent Delivery Message Me"
+                "For Urgent Delivery Message Me",
+                "For Assignment Work or Drawing Work, feel free to message us for any doubts"
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-2 justify-center md:justify-start text-slate-400">
                   <div className="h-1.5 w-1.5 rounded-full bg-[#17d492]" />
