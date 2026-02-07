@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-const AboutPage = () => {
+const AboutClient = () => {
   return (
     <section className="bg-[#22323c] text-[#f5f5f5] min-h-screen">
       <div className="max-w-5xl mx-auto px-4 py-16">
@@ -16,9 +16,7 @@ const AboutPage = () => {
         <p className="text-lg text-[#f5f5f5]/80 leading-relaxed mb-6">
           From notebooks and pens to art supplies and exam essentials, we
           provide everything at the lowest possible price with
-          <span className="text-[#17d492] font-semibold">
-            Cash on Delivery
-          </span>
+          <span className="text-[#17d492] font-semibold">Cash on Delivery</span>
           convenience.
         </p>
 
@@ -55,4 +53,4 @@ const AboutPage = () => {
   );
 };
 
-export default AboutPage;
+export default AboutClient;
