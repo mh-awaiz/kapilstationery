@@ -13,7 +13,7 @@ export async function GET(req) {
 
     await connectDB();
 
-    const orders = await Order.find().sort({ createdAt: -1 });
+    const orders = await Order.find().sort({ timestamp: -1 });
 
     return new Response(JSON.stringify(orders), { status: 200 });
   } catch (error) {

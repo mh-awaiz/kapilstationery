@@ -145,7 +145,7 @@ function OrdersDashboard({ adminKey }) {
             <div>
               <p className="font-semibold">Order ID: {order.orderId}</p>
               <p className="text-sm text-gray-500">
-                {new Date(order.createdAt).toLocaleString()}
+                {new Date(order.timestamp).toLocaleString("en-IN")}
               </p>
             </div>
             <button
@@ -183,7 +183,6 @@ function OrdersDashboard({ adminKey }) {
     </div>
   );
 }
-
 
 /* ================= PRODUCTS ================= */
 
