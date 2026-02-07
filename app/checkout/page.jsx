@@ -70,7 +70,7 @@ export default function CheckoutPage() {
       <div className="max-w-6xl mx-auto">
         <h1 className="text-2xl font-bold mb-6 text-[#17d492]">Checkout</h1>
 
-        {/* ✅ Success Message */}
+        {/* Success Message */}
         {success && (
           <div className="mb-6 rounded-lg border border-[#17d492] bg-[#17d492]/10 p-4 text-[#17d492] font-semibold">
             ✅ Order placed successfully! We’ll contact you soon.
@@ -142,20 +142,51 @@ export default function CheckoutPage() {
                 </div>
               </div>
               {isJamiaStudent && (
-                <div className="mt-4 rounded-lg bg-[#17d492]/10 border border-[#17d492] p-4 text-sm">
-                  <p className="font-semibold mb-2 text-[#17d492]">
-                    📌 Important Delivery Information
+                <div className="mt-4 rounded-lg bg-[#17d492]/10 border border-[#17d492] p-4 text-sm text-white/90">
+                  <p className="font-semibold mb-3 text-[#17d492]">
+                    Important Delivery Information for Jamia Students
                   </p>
-                  <ul className="list-disc pl-5 space-y-1 text-white/80">
+
+                  <p className="mb-3">
+                    For urgent orders or any other queries, message us on
+                    WhatsApp:
+                    <span className="font-semibold text-[#17d492]">
+                      {" "}
+                      7982670413
+                    </span>
+                  </p>
+
+                  <p className="font-medium mb-2 text-white">
+                    Delivery Instructions
+                  </p>
+
+                  <ul className="list-disc pl-5 space-y-2">
+                    <li>Free delivery for all Jamia students</li>
                     <li>
-                      Delivery for Jamia students is <b>FREE</b>
+                      Delivery available only from Monday to Friday (working
+                      days)
                     </li>
                     <li>
-                      Girls Hostel: <b>7–8 PM</b> (J&K, BHM, Halls of Girls
-                      Residence, etc.)
+                      Please mention complete delivery details while placing the
+                      order:
+                      <ul className="list-disc pl-5 mt-1 space-y-1">
+                        <li>Gate number or hostel name</li>
+                        <li>Preferred delivery time slot</li>
+                      </ul>
                     </li>
                     <li>
-                      Boys Hostel: <b>8–9 PM</b> (APJ, AMK, SRK, FRK, etc.)
+                      Delivery is available to all Jamia departments (Gate 1 to
+                      Gate 30) during the following time slots:
+                      <ul className="list-disc pl-5 mt-1 space-y-1">
+                        <li>Morning: 8:45 AM – 9:15 AM</li>
+                        <li>Afternoon: 1:00 PM – 2:00 PM</li>
+                        <li>Evening: 5:00 PM – 6:00 PM</li>
+                      </ul>
+                    </li>
+                    <li>
+                      Hostel deliveries (Boys’ & Girls’) are available from 8:00
+                      PM – 9:00 PM at all hostel lines (J&amp;K, BHM, APJ, SRK,
+                      etc.). Meeting point will always be the hostel main gate.
                     </li>
                   </ul>
                 </div>

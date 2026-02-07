@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 
-const ContactPage = () => {
+const ContactClient = () => {
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -110,4 +110,4 @@ const ContactPage = () => {
   );
 };
 
-export default ContactPage;
+export default ContactClient;
