@@ -2,15 +2,18 @@
 
 import { useCart } from "../context/CartContext.js";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function CheckoutPage() {
   const { cart, clearCart } = useCart();
+  const router = useRouter();
 
   const [form, setForm] = useState({
     name: "",
     phone: "",
     email: "",
     address: "",
+    timeSlot: "",
   });
   const [isJamiaStudent, setIsJamiaStudent] = useState(null);
 
@@ -28,30 +31,41 @@ export default function CheckoutPage() {
       alert("Please fill all required fields");
       return;
     }
+    if (!form.name || !form.phone || !form.address) {
+      alert("Please fill all required fields");
+      return;
+    }
+
+    if (isJamiaStudent && !form.timeSlot) {
+      alert("Please select a delivery time slot");
+      return;
+    }
 
     setLoading(true);
 
-   const res = await fetch("/api/order", {
-     method: "POST",
-     headers: { "Content-Type": "application/json" },
-     body: JSON.stringify({
-       customer: { ...form, isJamiaStudent },
-       cart,
-       total: grandTotal,
-       deliveryCharge,
-     }),
-   });
+    const res = await fetch("/api/order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        customer: {
+          ...form,
+          isJamiaStudent,
+          timeSlot: form.timeSlot,
+        },
 
-   let data;
-   try {
-     data = await res.json();
-     console.log("Order response:", data);
-   } catch (err) {
-     console.error("Failed to parse JSON:", err);
-     const text = await res.text();
-     console.error("Raw response:", text);
-   }
+        cart,
+        total: grandTotal,
+        deliveryCharge,
+      }),
+    });
 
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message || "Order failed");
+      return;
+    }
+    setSuccess(true);
 
     setLoading(false);
 
@@ -59,9 +73,11 @@ export default function CheckoutPage() {
       setSuccess(true);
       clearCart();
       setForm({ name: "", phone: "", email: "", address: "" });
-      setTimeout(() => setSuccess(false), 5000);
-    } else {
-      alert("Failed to place order. Please try again.");
+
+      // Redirect to home after 3 seconds
+      setTimeout(() => {
+        router.push("/");
+      }, 3000);
     }
   };
 
@@ -141,30 +157,82 @@ export default function CheckoutPage() {
                   </label>
                 </div>
               </div>
+
+              {isJamiaStudent && (
+                <div className="mb-4">
+                  <p className="mb-2 font-medium text-[#17d492]">
+                    Are you a Jamia student?
+                  </p>
+
+                  <div className="flex gap-4">
+                    <label>
+                      <input
+                        type="radio"
+                        name="timeSlot"
+                        value="Morning: 8:45 AM – 9:15 AM"
+                        checked={form.timeSlot === "Morning: 8:45 AM – 9:15 AM"}
+                        onChange={(e) =>
+                          setForm({ ...form, timeSlot: e.target.value })
+                        }
+                      />
+                      Morning: 8:45 AM – 9:15 AM
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="timeSlot"
+                        value="Afternoon: 1:00 PM – 2:00 PM"
+                        checked={
+                          form.timeSlot === "Afternoon: 1:00 PM – 2:00 PM"
+                        }
+                        onChange={(e) =>
+                          setForm({ ...form, timeSlot: e.target.value })
+                        }
+                      />
+                      Afternoon: 1:00 PM – 2:00 PM
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="timeSlot"
+                        value="Evening: 5:00 PM – 6:00 PM"
+                        checked={form.timeSlot === "Evening: 5:00 PM – 6:00 PM"}
+                        onChange={(e) =>
+                          setForm({ ...form, timeSlot: e.target.value })
+                        }
+                      />
+                      Evening: 5:00 PM – 6:00 PM
+                    </label>
+                  </div>
+                </div>
+              )}
+
               {isJamiaStudent && (
                 <div className="mt-4 rounded-lg bg-[#17d492]/10 border border-[#17d492] p-4 text-sm text-white/90">
                   <p className="font-semibold mb-3 text-[#17d492]">
                     Important Delivery Information for Jamia Students
                   </p>
-
                   <p className="mb-3">
                     For urgent orders or any other queries, message us on
                     WhatsApp:
-                    <span className="font-semibold text-[#17d492]">
-                      {" "}
-                      7982670413
+                  </p>
+                  <p className="mb-3">
+                    For assignment work or drawing work, feel free to message us
+                    for any doubts at:<span className="font-semibold text-[#17d492]"> 7982670413
                     </span>
                   </p>
-
                   <p className="font-medium mb-2 text-white">
                     Delivery Instructions
                   </p>
-
                   <ul className="list-disc pl-5 space-y-2">
                     <li>Free delivery for all Jamia students</li>
                     <li>
                       Delivery available only from Monday to Friday (working
                       days)
+                    </li>
+                    <li className="font-semibold">
+                      You’ll receive a confirmation call before delivery to
+                      verify your order.
                     </li>
                     <li>
                       Please mention complete delivery details while placing the
@@ -212,7 +280,10 @@ export default function CheckoutPage() {
 
             <div className="space-y-3 mb-4">
               {cart.map((item) => (
-                <div key={item.id} className="flex justify-between text-sm">
+                <div
+                  key={`${item.title}-${item.quantity}`}
+                  className="flex justify-between text-sm"
+                >
                   <span className="text-white/80">
                     {item.title} × {item.quantity}
                   </span>

@@ -163,6 +163,10 @@ function OrdersDashboard({ adminKey }) {
             <p>Email: {order.customer.email || "N/A"}</p>
             <p>Address: {order.customer.address}</p>
             <p>Jamia Student: {order.customer.isJamiaStudent ? "Yes" : "No"}</p>
+            <p>
+              Time Slot:
+              {order.customer?.timeSlot || order.timeSlot || "N/A"}
+            </p>
           </div>
 
           <div className="mt-2 border-t border-gray-200 pt-2">

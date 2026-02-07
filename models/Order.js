@@ -2,13 +2,17 @@ import mongoose from "mongoose";
 
 const OrderSchema = new mongoose.Schema({
   orderId: { type: String, required: true, unique: true },
+
   customer: {
     name: { type: String, required: true },
     phone: { type: String, required: true },
     email: { type: String, required: true },
     address: { type: String, required: true },
+
     isJamiaStudent: { type: Boolean, required: true },
+    timeSlot: { type: String, required: true,},
   },
+
   items: [
     {
       title: { type: String, required: true },
@@ -16,8 +20,10 @@ const OrderSchema = new mongoose.Schema({
       price: { type: Number, required: true },
     },
   ],
+
   totalAmount: { type: Number, required: true },
   deliveryCharge: { type: Number, required: true },
+
   timestamp: { type: Date, default: Date.now },
 });
 

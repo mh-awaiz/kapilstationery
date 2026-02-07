@@ -16,11 +16,25 @@ export async function POST(req) {
       });
     }
 
+    if (!customer?.timeSlot) {
+      return new Response(
+        JSON.stringify({ message: "Time slot is required" }),
+        { status: 400 },
+      );
+    }
+
     const orderId = "ORD-" + Date.now();
 
     const order = new Order({
       orderId,
-      customer,
+      customer: {
+        name: customer.name,
+        phone: customer.phone,
+        email: customer.email,
+        address: customer.address,
+        isJamiaStudent: customer.isJamiaStudent,
+        timeSlot: customer.timeSlot,
+      },
       items: cart.map((item) => ({
         title: item.title,
         quantity: item.quantity,
@@ -29,7 +43,6 @@ export async function POST(req) {
       totalAmount: total,
       deliveryCharge,
     });
-
     await order.save();
 
     // Send email
@@ -55,21 +68,22 @@ export async function POST(req) {
           to: process.env.EMAIL_USER,
           subject: `New Order Received: ${orderId}`,
           text: `
-You have received a new order!
+            You have received a new order!
 
-Order ID: ${orderId}
-Name: ${customer.name}
-Phone: ${customer.phone}
-Email: ${customer.email}
-Address: ${customer.address}
-Jamia Student: ${customer.isJamiaStudent ? "Yes" : "No"}
+            Order ID: ${orderId}
+            Name: ${customer.name}
+            Phone: ${customer.phone}
+            Email: ${customer.email}
+            Address: ${customer.address}
+            Jamia Student: ${customer.isJamiaStudent ? "Yes" : "No"}
+            Time Slot: ${customer.timeSlot}
 
-Items:
-${itemsList}
+            Items:
+            ${itemsList}
 
-Delivery Charge: ₹${deliveryCharge}
-Total Amount: ₹${total}
-Timestamp: ${new Date().toLocaleString()}
+            Delivery Charge: ₹${deliveryCharge}
+            Total Amount: ₹${total}
+            Timestamp: ${new Date().toLocaleString()}
           `,
         });
       }
