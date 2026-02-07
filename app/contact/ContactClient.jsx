@@ -47,7 +47,7 @@ const ContactClient = () => {
   };
 
   return (
-    <section className="bg-[#22323c] text-[#f5f5f5] min-h-screen relative">
+    <section className="bg-[#22323c] text-[#f5f5f5] min-h-screen relative py-15">
       {/* POPUP */}
       {popup.show && (
         <div className="fixed top-6 right-6 z-50 animate-slide-in">
