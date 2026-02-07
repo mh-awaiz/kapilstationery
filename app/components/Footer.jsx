@@ -3,109 +3,91 @@ import { FaFacebookF, FaInstagram, FaWhatsapp } from "react-icons/fa";
 import { TbTruckDelivery } from "react-icons/tb";
 import { IoIosCall } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
-
 import Link from "next/link";
 
 const Footer = () => {
   return (
-    <footer className="bg-[#22323c] text-[#f5f5f5]">
-      <div className="max-w-7xl mx-auto px-4 py-10">
-        {/* Top Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
-          {/* Brand */}
-          <div>
-            <h2 className="text-xl font-bold text-[#17d492]">Kapil Store</h2>
-            <p className="text-sm mt-3 text-[#f5f5f5]/80">
-              Your one-stop shop for books, notebooks, pens and all stationery
-              essentials. Cash on Delivery available.
+    <footer className="bg-[#1a2830] text-[#f5f5f5] pt-16 pb-8 border-t border-white/5">
+      <div className="max-w-7xl mx-auto px-6">
+        {/* Main Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+          
+          {/* Brand Column */}
+          <div className="col-span-1 md:col-span-1">
+            <h2 className="text-2xl font-black tracking-tighter text-[#17d492]">
+              STUDENT<span className="text-white"> STATIONERY</span>
+            </h2>
+            <p className="text-sm mt-4 text-slate-400 leading-relaxed font-medium">
+              Providing Jamia students with top-quality assignments and 
+              stationery at the lowest prices. Built by a student, for the students.
             </p>
+            <div className="flex gap-3 mt-6">
+              {[
+                { icon: <FaFacebookF />, link: "#" },
+                { icon: <FaInstagram />, link: "#" },
+                { icon: <FaWhatsapp />, link: "https://chat.whatsapp.com/Di7XVQjwzbf3yTEiX71tUS" }
+              ].map((social, i) => (
+                <a
+                  key={i}
+                  href={social.link}
+                  target="_blank"
+                  className="w-10 h-10 flex items-center justify-center bg-slate-800 text-[#17d492] rounded-xl hover:bg-[#17d492] hover:text-[#22323c] transition-all duration-300"
+                >
+                  {social.icon}
+                </a>
+              ))}
+            </div>
           </div>
 
-          {/* Links */}
+          {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-3">Quick Links</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="/" className="hover:text-[#17d492] transition">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="hover:text-[#17d492] transition">
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  className="hover:text-[#17d492] transition"
-                >
-                  Contact
-                </Link>
-              </li>
+            <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-[#17d492] mb-6">Explore</h3>
+            <ul className="space-y-4 text-sm font-medium text-slate-400">
+              {["Home", "About", "Contact"].map((item) => (
+                <li key={item}>
+                  <Link href={item === "Home" ? "/" : `/${item.toLowerCase()}`} className="hover:text-white transition-colors flex items-center gap-2 group">
+                    <span className="h-px w-0 bg-[#17d492] group-hover:w-3 transition-all"></span>
+                    {item}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Contact */}
-          <div>
-            <h3 className="text-lg font-semibold mb-3">Contact</h3>
-
-            <p className="text-sm text-[#f5f5f5]/80 flex items-center justify-center md:justify-start gap-2">
-              <TbTruckDelivery size={25} className="p-1" />
-              Local delivery available
-            </p>
-
-            <p className="text-sm text-[#f5f5f5]/80  flex items-center justify-center md:justify-start gap-2">
-              <IoIosCall size={25} className="p-1" />
-              +91 79826 70413
-            </p>
-
-            <p className="text-sm text-[#f5f5f5]/80  flex items-center justify-center md:justify-start gap-2">
-              <MdEmail size={25} className="p-1" />{" "}
-              kapilguptakapil1111@gmail.com
-            </p>
-
-            {/* Social Icons */}
-            <div className="flex justify-center md:justify-start gap-4 mt-4">
-              <a
-                href="#"
-                target="_blank"
-                className="p-2 bg-[#17d492] text-[#22323c] rounded-full hover:scale-105 transition"
-              >
-                <FaFacebookF />
+          {/* Contact Details */}
+          <div className="md:col-span-2 lg:col-span-1">
+            <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-[#17d492] mb-6">Get in Touch</h3>
+            <div className="space-y-4">
+              <div className="flex items-start gap-3 group">
+                <TbTruckDelivery size={20} className="text-[#17d492]" />
+                <span className="text-sm text-slate-400 group-hover:text-white transition-colors">Free Delivery for Jamia Students</span>
+              </div>
+              <a href="tel:7982670413" className="flex items-start gap-3 group">
+                <IoIosCall size={20} className="text-[#17d492]" />
+                <span className="text-sm text-slate-400 group-hover:text-white transition-colors">+91 79826 70413</span>
               </a>
-              <a
-                href="#"
-                target="_blank"
-                className="p-2 bg-[#17d492] text-[#22323c] rounded-full hover:scale-105 transition"
-              >
-                <FaInstagram />
-              </a>
-              <a
-                href="https://chat.whatsapp.com/Di7XVQjwzbf3yTEiX71tUS"
-                target="_blank"
-                className="p-2 bg-[#17d492] text-[#22323c] rounded-full hover:scale-105 transition"
-              >
-                <FaWhatsapp />
+              <a href="mailto:kapilguptakapil1111@gmail.com" className="flex items-start gap-3 group">
+                <MdEmail size={20} className="text-[#17d492]" />
+                <span className="text-sm text-slate-400 group-hover:text-white transition-colors break-all">kapilguptakapil1111@gmail.com</span>
               </a>
             </div>
           </div>
         </div>
 
-        {/* Bottom */}
-        <div className="border-t border-[#f5f5f5]/20 mt-10 pt-6 text-center text-sm text-[#f5f5f5]/70">
-          © {new Date().getFullYear()} Kapil Store. All rights reserved.
+        {/* Bottom Bar */}
+        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-bold tracking-widest uppercase text-slate-500">
+          <p>© {new Date().getFullYear()} STUDENT STATIONERY. All rights reserved.</p>
+          <p className="flex items-center gap-2">
+            Engineered by 
+            <a
+              href="https://mohammedawaiz.vercel.app/"
+              target="_blank"
+              className="text-[#17d492] hover:underline underline-offset-4"
+            >
+              Mohammed Awaiz
+            </a>
+          </p>
         </div>
-        <p className="text-bold text-center">
-          Website Developed by{" "}
-          <a
-            href="https://mohammedawaiz.vercel.app/"
-            target="_blank"
-            className="text-[#17d492] font-semibold"
-          >
-            Mohammed Awaiz
-          </a>
-        </p>
       </div>
     </footer>
   );

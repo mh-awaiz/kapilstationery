@@ -1,105 +1,110 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaShoppingCart, FaBars, FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Effect to change background on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const navLinks = [
+    { name: "Home", href: "/" },
+    { name: "Products", href: "/#products" },
+    { name: "About", href: "/about" },
+    { name: "Contact", href: "/contact" },
+  ];
 
   return (
-    <nav className="bg-[#22323c] text-[#f5f5f5] sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <Image
-              src="/image.png"
-              alt="Logo"
-              width={50}
-              height={50}
-              className="h-14 w-auto object-contain transition-transform duration-300 hover:scale-105"
-            />
+    <nav 
+      className={`fixed w-full top-0 z-50 transition-all duration-300 ${
+        scrolled 
+          ? "bg-[#22323c]/80 backdrop-blur-md py-2 shadow-lg" 
+          : "bg-[#22323c] py-4"
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex items-center justify-between">
+          {/* Logo Section */}
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="relative">
+              <div className="absolute inset-0 bg-[#17d492] blur-md opacity-0 group-hover:opacity-9 transition-opacity"></div>
+              <Image
+                src="/newlogonav.png"
+                alt="Logo"
+                width={100}
+                height={100}
+                className="relative h-12 w-auto transition-transform duration-300 group-hover:scale-110"
+              />
+            </div>
           </Link>
 
-          {/* Desktop Links */}
-          <div className="hidden md:flex items-center gap-8">
-            {["Home", "About", "Contact"].map((item) => (
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-10">
+            {navLinks.map((link) => (
               <Link
-                key={item}
-                href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
-                className="relative group"
+                key={link.name}
+                href={link.href}
+                className="relative text-sm font-bold uppercase tracking-widest text-slate-300 hover:text-[#17d492] transition-colors group"
               >
-                <span className="transition-colors group-hover:text-[#17d492]">
-                  {item}
-                </span>
-                <span className="absolute left-0 -bottom-1 h-[2px] w-0 bg-[#17d492] transition-all duration-300 group-hover:w-full" />
+                {link.name}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#17d492] transition-all duration-300 group-hover:w-full" />
               </Link>
             ))}
-            <Link
-              href="/#products"
-              className="hover:text-[#17d492] transition-all duration-300"
-            >
-              Products
-            </Link>
           </div>
 
-          {/* Right Icons */}
-          <div className="flex items-center gap-4">
-            {/* Cart */}
+          {/* Right Action Icons */}
+          <div className="flex items-center gap-6">
             <Link
               href="/cart"
-              className="relative transform transition duration-300 hover:scale-110 hover:text-[#17d492]"
+              className="group relative p-2 text-white hover:text-[#17d492] transition-colors"
             >
-              <FaShoppingCart className="text-xl" />
-
-              {/* Cart Badge (enable when cartCount > 0) */}
-
-              {/* <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full 
-              bg-[#17d492] text-[#22323c] text-xs font-bold flex items-center justify-center animate-pulse">
-                2
-              </span>  */}
+              <FaShoppingCart size={22} className="group-hover:rotate-12 transition-transform" />
             </Link>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Toggle */}
             <button
-              className="md:hidden text-xl transition-transform duration-300"
+              className="md:hidden text-white hover:text-[#17d492] transition-colors"
               onClick={() => setOpen(!open)}
             >
-              {open ? (
-                <FaTimes className="rotate-90 transition-transform duration-300" />
-              ) : (
-                <FaBars />
-              )}
+              {open ? <FaTimes size={24} /> : <FaBars size={24} />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu with Smooth Animation */}
+      {/* Mobile Menu Overlay */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${
-          open ? "max-h-60 opacity-100" : "max-h-0 opacity-0"
-        } bg-[#22323c] border-t border-white/20`}
+        className={`fixed inset-x-0 top-[72px] p-6 bg-[#1a2830] border-t border-white/5 transition-all duration-500 ease-in-out md:hidden ${
+          open ? "translate-y-0 opacity-100 visible" : "-translate-y-10 opacity-0 invisible"
+        }`}
       >
-        <div className="flex flex-col px-4 py-4 gap-4">
-          {["Home", "About", "Contact"].map((item, i) => (
+        <div className="flex flex-col gap-6">
+          {navLinks.map((link, i) => (
             <Link
-              key={item}
-              href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
+              key={link.name}
+              href={link.href}
               onClick={() => setOpen(false)}
-              className="transform transition-all duration-300 hover:translate-x-2 hover:text-[#17d492]"
-              style={{ transitionDelay: `${i * 80}ms` }}
+              className="text-2xl font-black text-white hover:text-[#17d492] transition-all flex justify-between items-center group"
+              style={{ transitionDelay: `${i * 50}ms` }}
             >
-              {item}
+              {link.name}
+              <div className="h-1 w-1 rounded-full bg-[#17d492] opacity-0 group-hover:opacity-100 transition-opacity" />
             </Link>
           ))}
-          <Link
-            href="/#products"
-            className="hover:text-[#17d492] transition-all duration-300"
-          >
-            Products
-          </Link>
+          <div className="mt-4 pt-6 border-t border-white/10">
+            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Support</p>
+            <p className="text-[#17d492] font-bold mt-1">+91 7982670413</p>
+          </div>
         </div>
       </div>
     </nav>

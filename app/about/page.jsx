@@ -3,7 +3,7 @@ import React from "react";
 
 const AboutPage = () => {
   return (
-    <section className="bg-[#22323c] text-[#f5f5f5] min-h-screen">
+    <section className="bg-[#22323c] text-[#f5f5f5] min-h-screen py-15">
       <div className="max-w-5xl mx-auto px-4 py-16">
         <h1 className="text-4xl font-bold text-[#17d492] mb-6">About Us</h1>
 
