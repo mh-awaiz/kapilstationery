@@ -10,7 +10,7 @@ const OrderSchema = new mongoose.Schema({
     address: { type: String, required: true },
 
     isJamiaStudent: { type: Boolean, required: true },
-    timeSlot: { type: String, required: true,},
+    timeSlot: { type: String, required: true },
   },
 
   items: [
@@ -18,6 +18,7 @@ const OrderSchema = new mongoose.Schema({
       title: { type: String, required: true },
       quantity: { type: Number, required: true },
       price: { type: Number, required: true },
+      description: {type: String, default: ""},
     },
   ],
 

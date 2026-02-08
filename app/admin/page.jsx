@@ -170,12 +170,20 @@ function OrdersDashboard({ adminKey }) {
           </div>
 
           <div className="mt-2 border-t border-gray-200 pt-2">
-            <p className="font-medium">Items:</p>
+            <p className="font-extrabold ">Items:</p>
             {order.items.map((item, idx) => (
-              <p key={idx}>
-                {item.title} × {item.quantity} = ₹{item.price * item.quantity}
-              </p>
+              <>
+                <p className="font-bold" key={idx}>
+                  {item.title} × {item.quantity} = ₹
+                  {item.price * item.quantity}{" "}
+                </p>
+                <p className="font-light" key={idx}>{`Item Description:  ${item.description}` || "N/A"}</p>
+              </>
             ))}
+            {/* <p className="font-semibold">Item Description: </p>
+            {order.items.map((item, idx) => (
+              <p key={idx}>{item.description || "N/A"}</p>
+            ))} */}
           </div>
 
           <div className="mt-2 border-t border-gray-200 pt-2 flex justify-between font-bold">

@@ -37,6 +37,7 @@ export async function POST(req) {
       },
       items: cart.map((item) => ({
         title: item.title,
+        description: item.description || "",
         quantity: item.quantity,
         price: item.price,
       })),
@@ -80,6 +81,9 @@ export async function POST(req) {
 
             Items:
             ${itemsList}
+            Item Descriptions: ${cart
+              .map((item) => `${item.title}: ${item.description || "N/A"}`)
+              .join("\n")}
 
             Delivery Charge: ₹${deliveryCharge}
             Total Amount: ₹${total}
